@@ -27,6 +27,8 @@ public class MemberController {
 	@Autowired
 	public MemberMapper memberMapper;
 	
+	int emailcount = 0;
+	
 	//회원가입 폼
 	@RequestMapping(value = "/joinForm.do")
 	public String joinForm() {
@@ -98,7 +100,7 @@ public class MemberController {
 	}
 	
 	@RequestMapping(value = "/emailcertificationEnter.do{dice}")
-	public ModelAndView emailcertificationEnter(String certificationnumber, @PathVariable String dice, HttpServletResponse resp) throws IOException {
+	public ModelAndView emailcertificationEnter(String certificationnumber, String useremail, @PathVariable String dice, HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		System.out.println("마지막 : certificationnumber : " + certificationnumber);
 		System.out.println("마지막 : dice : " + dice);
 		
@@ -106,21 +108,25 @@ public class MemberController {
 		ModelAndView mv = new ModelAndView();
 		
 		if (certificationnumber.equals(dice)) {
+			emailcount = 1;
 			//인증번호가 일치할 경우 인증번호가 맞다는 창을 출력하고 회원가입창으로 이동함
 			mv.setViewName("join/joinForm");
 			mv.addObject("e_mail", certificationnumber);
+			mv.addObject("emailcount", emailcount);
 			
 			//만약 인증번호가 같다면 이메일을 한번 더 입력할 필요가 없게 한다.
 			resp.setContentType("text/html; charset=UTF-8");
 			PrintWriter out_equals = resp.getWriter();
-			out_equals.println("<script>alert('인증번호가 일치하였습니다. 회원가입창으로 이동합니다.');</script>");
+			out_equals.println("<script>alert('인증번호가 일치하였습니다. 회원가입창으로 이동합니다.'); window.close();</script>");
 			out_equals.flush();
 			
 			return mv;
 			
 		} else if (certificationnumber != dice) {
+			String tomail = req.getParameter("useremail");
 			ModelAndView mv2 = new ModelAndView();
 			mv2.setViewName("join/emailcertification");
+			mv2.addObject("email", tomail);
 			
 			resp.setContentType("text/html; charset=UTF-8");
 			PrintWriter out_equals = resp.getWriter();

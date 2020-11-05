@@ -14,7 +14,7 @@
   <h4>인증번호 확인</h4>
   <div class="form-group">
     <div class="input-group">
-      <input type="text" name="useremail" id="email" class="form-control" value="${email}">
+      <input type="text" name="useremail" id="email" class="form-control" value="${email}" readonly>
       <span class="input-group-btn">
         <button type="button" class="btn btn-primary" onclick="location.href='emailcertification.do?useremail=${email}'">이메일 인증</button>
       </span>
